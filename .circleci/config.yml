@@ -17,15 +17,21 @@ jobs:
     steps:
       - run: echo World
   save_hello_world_output:
-      - run: echo "Hello, My name is Mohamed" > output.txt
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - run: echo "Hello, My name is Mohamed" > ~/output.txt
       - persist_to_workspace:
-          root: /tmp/workspace
+          root: ~/
           paths:
-            - ./output.txt
+            - output.txt
   print_output_file:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
       - attach_workspace:
-          at: /tmp/workspace
-      - run: cat output.txt
+          at: ~/
+      - run: cat ~/output.txt
 
 
 workflows:
