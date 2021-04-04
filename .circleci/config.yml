@@ -50,6 +50,17 @@ jobs:
     steps:
       - print_pipeline_id
 
+  failures:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - run: return 1
+      - run:
+          name: on error
+          command: echo "An Error Occured"
+          when: on_fail
+
+
 
 workflows:
   # Name the workflow "welcome"
@@ -61,6 +72,7 @@ workflows:
           requires:
             - save_hello_world_output
       - print_commands
+      - failures
       # - welcome/run
       # - print_hello
       # - print_world:
