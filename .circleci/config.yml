@@ -16,13 +16,29 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - run: echo World
+  save_hello_world_output:
+      - run: echo "Hello, My name is Mohamed" > output.txt
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - ./output.txt
+  print_output_file:
+      - attach_workspace:
+          at: /tmp/workspace
+      - run: cat output.txt
+
+
 workflows:
   # Name the workflow "welcome"
   welcome:
     # Run the welcome/run job in its own container
     jobs:
-      - welcome/run
-      - print_hello
-      - print_world:
+      - save_hello_world_output
+      - print_output_file:
           requires:
-            - print_hello
+            - save_hello_world_output
+      # - welcome/run
+      # - print_hello
+      # - print_world:
+      #     requires:
+      #       - print_hello
