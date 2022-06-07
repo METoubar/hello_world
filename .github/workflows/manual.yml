@@ -32,9 +32,9 @@ jobs:
         id: check_env_name
         run: |
           size=${#${{ github.event.inputs.environment }}} 
-          if [[ ${{ github.event.inputs.environment }} == *['!'@#\$%^\&*()_+]* && $size -lt 15 ]]
+          if [[ ${{ github.event.inputs.environment }} == *['!'@#\$%^\&*()_+]* || $size -gt 15 ]]
           then
-            echo "It contains one of those"
+            echo "It contains one of those, and greater than 15"
           else
             echo "It is good"
           fi
