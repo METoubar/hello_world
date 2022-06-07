@@ -20,7 +20,6 @@ on:
         description: "Include  emojis"
         required: false
       environment:
-        type: environment
         required: false
         description: "env"
 
