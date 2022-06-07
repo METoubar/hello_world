@@ -33,6 +33,7 @@ jobs:
         run: |
           ns=${{ github.event.inputs.environment }}
           size=${#ns}
+          echo $size
           if [[ ${{ github.event.inputs.environment }} == *['!'@#\$%^\&*()_+]* || $size -gt 15 ]]
           then
             echo "It contains one of those, and greater than 15"
