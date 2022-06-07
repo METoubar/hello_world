@@ -16,7 +16,6 @@ on:
       name:
         description: "Env Name"
         required: true
-        default: ""
         options:
           - "dm-"
           - "sp-"
