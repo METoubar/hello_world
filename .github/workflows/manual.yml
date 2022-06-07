@@ -30,7 +30,7 @@ jobs:
     steps:
       - name: check length
         id: check_env_name
-        if: contains(github.event.inputs.environment, [!,@,#,$,%,^,&,*,(,),_])
+        if: contains(github.event.inputs.environment, fromJson('[!,@,#,$,%,^,&,*,(,),_]'))
         run: echo "your env name con not contain [!,@,#,$,%,^,&,*,(,),_]"
   # greet:
   #   runs-on: ubuntu-latest
