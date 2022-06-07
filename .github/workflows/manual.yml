@@ -6,8 +6,9 @@ on:
       name:
         type: choice
         description: Who to greet
+        required: true
+        default: ""
         options: 
-        - ""
         - monalisa
         - cschleiden
       message:
