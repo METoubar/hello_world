@@ -31,7 +31,8 @@ jobs:
       - name: check length
         id: check_env_name
         run: |
-          if [[ ${{ github.event.inputs.environment }} == *['!'@#\$%^\&*()_+]* ]]
+          size=${#${{ github.event.inputs.environment }}} 
+          if [[ ${{ github.event.inputs.environment }} == *['!'@#\$%^\&*()_+]* && $size -lt 15 ]]
           then
             echo "It contains one of those"
           else
