@@ -21,7 +21,7 @@ on:
         required: false
       environment:
         type: environment
-        required: false
+        required: true
         description: "env"
 
 jobs:
