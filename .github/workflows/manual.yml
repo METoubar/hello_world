@@ -20,7 +20,8 @@ on:
         description: "Include  emojis"
         required: false
       environment:
-        required: true
+        type: environment
+        required: false
         description: "env"
 
 jobs:
@@ -30,8 +31,11 @@ jobs:
     steps:
       - name: check length
         id: check_env_name
-        if: contains(github.event.inputs.environment, fromJson('[!,@,#,$,%,^,&,*,(,),_]'))
-        run: echo "your env name con not contain ["!","@","#","$","%","^","&","*","(",")","_"]"
+        run: |
+          if [[ ${{ github.event.inputs.environment }} == *['!'@#\$%^\&*()_+]* ]]
+          then
+            echo "It contains one of those"
+          fi
   # greet:
   #   runs-on: ubuntu-latest
   #   needs: synatx_checkup
