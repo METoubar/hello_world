@@ -34,10 +34,11 @@ jobs:
         
   results:
     name: priniting output
+    needs: synatx_checkup
     runs-on: ubuntu-latest
     steps:
       - name: printing output result
-        run: echo "${{ synatx_checkup.outputs.env_checks }}"
+        run: echo "${{ needs.synatx_checkup.outputs.env_checks }}"
         
         
   # greet:
