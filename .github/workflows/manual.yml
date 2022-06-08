@@ -30,7 +30,7 @@ jobs:
       - name: check length
         id: check_env_name
         run: |
-          ns=${{ github.event.inputs.team }}-${{ github.event.inputs.name }}
+          ns=${{ github.event.inputs.team }}-${{ github.event.inputs.environment }}
           size=${#ns} 
           if (( $ns == *['!'@#\$%^\&*()_+ ]* && $size -lt 16 ));
           then
