@@ -36,6 +36,8 @@ jobs:
           then
             echo "make sure that your environment name does not contain special chars ['!'@#\$%^\&*()_+ ] and less than 16 character"
             echo "::set-output name=env_checks::false"
+          else
+            echo "your environment name is fine"
           fi
         
         
