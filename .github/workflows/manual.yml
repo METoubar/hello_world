@@ -9,18 +9,15 @@ on:
         description: Who to greet
         options:
           - ""
-          - "ct"
           - "dm"
-          - "gt"
           - "mp"
           - "sp"
-          - "sh"
-      use-emoji:
+      take_disk_snapshot:
         type: boolean
-        description: "Include  emojis"
-        required: false
+        description: "Take a snapshot from the disk before removing it"
+        required: true
       environment:
-        required: false
+        required: true
         description: "env"
 
 jobs:
