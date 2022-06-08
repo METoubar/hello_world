@@ -30,7 +30,13 @@ jobs:
     steps:
       - name: check length
         id: check_env_name
-        run: echo ${{ github.event.inputs.mysql_snapshot }}
+        run: |
+          echo ${{ github.event.inputs.mysql_snapshot }}
+          if [[ ${{ github.event.inputs.mysql_snapshot }} ]]; then
+            echo "boolean"
+          else
+           echo "string"
+         fi
 #         run: |
 #           ns="${{ github.event.inputs.name }}-${{ github.event.inputs.environment }}"
 #           size=${#ns} 
