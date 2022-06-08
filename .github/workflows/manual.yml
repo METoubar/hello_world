@@ -23,20 +23,25 @@ on:
 jobs:
   synatx_checkup:
     name: Scanning Environment Name
+    outputs:
+      env_checks: ${{ steps.check_env_name.output.env_checks }}
     runs-on: ubuntu-latest
     steps:
       - name: check length
         id: check_env_name
-        run: |
-          ns=${{ github.event.inputs.environment }}
-          size=${#ns}
-          echo $size
-          if [[ ${{ github.event.inputs.environment }} == *['!'@#\$%^\&*()_+]* || $size -gt 15 ]]
-          then
-            echo "It contains one of those, and greater than 15"
-          else
-            echo "It is good"
-          fi
+        run: ./create_env.sh
+        
+        
+  results:
+    name: priniting output
+    outputs:
+      env_checks: ${{ steps.check_env_name.output.env_checks }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: printing output result
+        run: echo "${{ checkup.outputs.env_checks }}"
+        
+        
   # greet:
   #   runs-on: ubuntu-latest
   #   needs: synatx_checkup
