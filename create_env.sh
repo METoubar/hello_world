@@ -13,5 +13,5 @@ if (( ${{ github.event.inputs.name }} == *['!'@#\$%^\&*()_+ ]* && $size -lt 16 )
 #     echo "::set-output name=env_checks::false"
 #     echo "You exceeded the max limit of environments"
 else
-    echo "::set-output name=env_checks::false"
+    echo "::set-output name=env_checks::true"
 fi
