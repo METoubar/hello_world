@@ -12,7 +12,7 @@ on:
           - "dm"
           - "mp"
           - "sp"
-      take_disk_snapshot:
+      mysql_snapshot:
         type: boolean
         description: "Take a snapshot from the disk before removing it"
         required: true
