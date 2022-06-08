@@ -27,21 +27,32 @@ jobs:
       env_checks: ${{ steps.check_env_name.output.env_checks }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
       - name: check length
         id: check_env_name
         run: |
-          chmod +x create_env.sh
-          ./create_env.sh
+          ns=${{ github.event.inputs.team }}-${{ github.event.inputs.name }}
+          size=${#ns} 
+          if [[ $ns == *['!'@#\$%^\&*()_+ ]* && $size -lt 16 ]];
+          then
+            echo "make sure that your environment name does not contain special chars ['!'@#\$%^\&*()_+ ] and less than 16 character"
+            echo "::set-output name=env_checks::false"
+          elif (( $(kubectl get ns | grep -i ${{ github.event.inputs.team }}-${{ github.event.inputs.name }}) )); then
+            echo "This environment already exist, please make sure to delete it, or use another name"
+            echo "::set-output name=env_checks::false"
+          elif ! (( $(kubectl get ns --no-header | grep -i ${{ github.event.inputs.team }} | wc -l) -lt 5 )); then
+            echo "::set-output name=env_checks::false"
+          else
+            echo "::set-output name=env_checks::true"
+          fi
         
         
-  results:
-    name: priniting output
-    needs: synatx_checkup
-    runs-on: ubuntu-latest
-    steps:
-      - name: printing output result
-        run: echo "${{ needs.synatx_checkup.outputs.env_checks }}"
+#   results:
+#     name: priniting output
+#     needs: synatx_checkup
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: printing output result
+#         run: echo "${{ needs.synatx_checkup.outputs.env_checks }}"
         
         
   # greet:
