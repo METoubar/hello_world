@@ -34,12 +34,10 @@ jobs:
         
   results:
     name: priniting output
-    outputs:
-      env_checks: ${{ steps.check_env_name.output.env_checks }}
     runs-on: ubuntu-latest
     steps:
       - name: printing output result
-        run: echo "${{ checkup.outputs.env_checks }}"
+        run: echo "${{ synatx_checkup.outputs.env_checks }}"
         
         
   # greet:
