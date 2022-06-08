@@ -32,7 +32,7 @@ jobs:
         id: check_env_name
         run: |
           echo ${{ github.event.inputs.mysql_snapshot }}
-          if [[ ${{ github.event.inputs.mysql_snapshot }} ]]; then
+          if [[ ${{ github.event.inputs.mysql_snapshot }} == 'true' ]]; then
             echo "boolean"
           else
            echo "string"
