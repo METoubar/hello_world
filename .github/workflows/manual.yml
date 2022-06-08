@@ -16,6 +16,7 @@ on:
         type: boolean
         description: "Take a snapshot from the disk before removing it"
         required: true
+        default: false
       environment:
         required: true
         description: "env"
@@ -29,16 +30,17 @@ jobs:
     steps:
       - name: check length
         id: check_env_name
-        run: |
-          ns="${{ github.event.inputs.name }}-${{ github.event.inputs.environment }}"
-          size=${#ns} 
-          if [[ `expr "$ns" : ".*[!' '@#\$%^\&*()_+].*"` -gt 0 || "$size" -gt 16 ]];
-          then
-            echo "make sure that your environment name does not contain special chars ['!'@#\$%^\&*()_+ ] and less than 16 character"
-            echo "::set-output name=env_checks::false"
-          else
-            echo "your environment name is fine"
-          fi
+        run: echo "${{ github.event.inputs.mysql_snapshot }}"
+#         run: |
+#           ns="${{ github.event.inputs.name }}-${{ github.event.inputs.environment }}"
+#           size=${#ns} 
+#           if [[ `expr "$ns" : ".*[!' '@#\$%^\&*()_+].*"` -gt 0 || "$size" -gt 16 ]];
+#           then
+#             echo "make sure that your environment name does not contain special chars ['!'@#\$%^\&*()_+ ] and less than 16 character"
+#             echo "::set-output name=env_checks::false"
+#           else
+#             echo "your environment name is fine"
+#           fi
         
         
 #   results:
