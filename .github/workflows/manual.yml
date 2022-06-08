@@ -32,7 +32,7 @@ jobs:
         run: |
           ns=${{ github.event.inputs.name }}-${{ github.event.inputs.environment }}
           size=${#ns} 
-          if (( "$ns" == *['!'@#\$%^\&*()_+]* ));
+          if (( ${{ github.event.inputs.name }}-${{ github.event.inputs.environment }} == *['!'@#\$%^\&*()_+]* ));
           then
             echo "make sure that your environment name does not contain special chars ['!'@#\$%^\&*()_+ ] and less than 16 character"
             echo "::set-output name=env_checks::false"
