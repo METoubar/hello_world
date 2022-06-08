@@ -30,7 +30,7 @@ jobs:
       - name: check length
         id: check_env_name
         run: |
-          ns=${{ github.event.inputs.name }}-${{ github.event.inputs.environment }}
+          ns="${{ github.event.inputs.name }}-${{ github.event.inputs.environment }}"
           size=${#ns} 
           if [[ `expr "$ns" : ".*[!' '@#\$%^\&*()_+].*"` -gt 0 || "$size" -gt 16 ]];
           then
