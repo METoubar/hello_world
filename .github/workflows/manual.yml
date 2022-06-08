@@ -30,7 +30,9 @@ jobs:
       - uses: actions/checkout@v3
       - name: check length
         id: check_env_name
-        run: ./create_env.sh
+        run: |
+          chmod +x create_env.sh
+          ./create_env.sh
         
         
   results:
