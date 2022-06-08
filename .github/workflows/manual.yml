@@ -36,7 +36,7 @@ jobs:
             echo "boolean"
           else
            echo "string"
-         fi
+          fi
 #         run: |
 #           ns="${{ github.event.inputs.name }}-${{ github.event.inputs.environment }}"
 #           size=${#ns} 
