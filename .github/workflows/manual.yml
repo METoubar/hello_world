@@ -6,7 +6,7 @@ on:
       name:
         type: choice
         required: true
-        description: Who to greet
+        description: Who \n to greet
         options:
           - ""
           - "dm"
