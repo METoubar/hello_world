@@ -1,0 +1,109 @@
+name: Scale up your Environment
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: "Environment_Name/Namespace"
+        required: true
+        default: ""
+
+      scale:
+        type: choice
+        description: "scaling type"
+        required: true
+        options:
+          - ""
+          - "up"
+          - "down"
+
+env:
+  PROJECT_ID: dev-nana-295215
+  GKE_CLUSTER: preview
+  GKE_ZONE: us-central1-a
+
+jobs:
+  setup:
+    name: Scaling
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # Setup gcloud CLI
+      - name: Setup gcloud and configure authentication
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          project_id: ${{ env.PROJECT_ID }}
+          export_default_credentials: true
+
+      # Configure docker to use the gcloud command-line tool as a credential helper
+      - name: Authenticate docker registry
+        run: |-
+          gcloud --quiet auth configure-docker
+
+      # Get the GKE credentials so we can deploy to the cluster
+      - name: Setup kubectl and configure authentication
+        uses: google-github-actions/get-gke-credentials@v0.2.1
+        with:
+          cluster_name: ${{ env.GKE_CLUSTER }}
+          location: ${{ env.GKE_ZONE }}
+          credentials: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+
+      - name: Set NameSpace name
+        run: |-
+          echo "NAMESPACE=${{ github.event.inputs.name }}" >> $GITHUB_ENV
+
+      - name: Namespace Checkup
+        id: check_namespace
+        run: |
+          echo "=============== Check the Namespace ==============="
+          kubectl get ns | grep -i $NAMESPACE > ns.txt
+          if [[ -s ns.txt ]]; then
+            echo ENV_EXISTS=true >> $GITHUB_ENV
+            if [[ ! $(kubectl get ns master -o jsonpath='{.metadata.annotations}' | grep -q 'protected') ]]; then
+              if [[ ${{ github.event.inputs.scale }} == 'up' ]]; then
+                echo "=============== Scaling Deployments ==============="
+                kubectl scale deploy -n $NAMESPACE --replicas=1 --all
+                echo "============== Scaling StatefulSets ==============="
+                kubectl scale statefulset -n $NAMESPACE --replicas=1 --all
+              elif [[ ${{ github.event.inputs.scale }} == 'down' ]]; then
+                echo "=============== Scaling Deployments ==============="
+                kubectl scale deploy -n $NAMESPACE --replicas=0 --all
+                echo "============== Scaling StatefulSets ==============="
+                kubectl scale statefulset -n $NAMESPACE --replicas=0 --all
+              fi
+            else
+              echo "Your Environment is PROTECTED, Can not be updated!"
+          else
+            echo ENV_EXISTS=false >> $GITHUB_ENV
+            echo "Your Environment does not exists"
+          fi
+
+      - name: Wait For Environment To Become Ready
+        if: env.ENV_EXISTS == 'true' && ${{ github.event.inputs.scale }} == 'up'
+        run: |-
+          until curl -s -f https://frappe-${NAMESPACE}.nmarket.tech/api/method/matajer.cron_jobs.test_connection.test_http
+          do
+            echo "Still waiting for the environment to get ready"
+            sleep 5
+          done
+          echo "Environment is running on https://frappe-${NAMESPACE}.nmarket.tech/"
+
+      - name: Create Environment Details Report
+        if: env.ENV_EXISTS == 'true'
+        run: |-
+          echo "Environment URL: https://frappe-${NAMESPACE}.nmarket.tech/" >> env.html
+          echo "Number of App Pods"
+          kubectl -n $NAMESPACE get pods | grep -i frappe >> env.html
+          echo "Number of Mysql Pods"
+          kubectl -n $NAMESPACE get pods | grep -i mysql >> env.html
+
+      - name: Upload Environment Details
+        if: env.ENV_EXISTS == 'true'
+        uses: actions/upload-artifact@v2
+        with:
+          name: environment-details
+          path: env.html
