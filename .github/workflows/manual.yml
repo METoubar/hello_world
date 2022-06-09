@@ -14,7 +14,7 @@ on:
           - "sp"
       mysql_snapshot:
         type: boolean
-        description: "Take a snapshot from the disk before removing it"
+        description: "Take a snapshot \n from the disk before removing it"
         required: true
         default: false
       environment:
