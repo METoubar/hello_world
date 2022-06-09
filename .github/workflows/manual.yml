@@ -6,7 +6,10 @@ on:
       name:
         type: choice
         required: true
-        description: Who \n to greet
+        description: |
+          Who
+          to 
+          greet
         options:
           - ""
           - "dm"
